@@ -1,13 +1,23 @@
-commands:
-  examplecommand:
-    permission: "examplecommand.tabcomplete"
-    arg-1:
-      - PLAYERS_LIST # PLAYERS_LIST RETURN THE LIST OF ALL ONLINE PLAYERS
+# PLACEHOLDERS FOR ARGUMETS
+#
+# PLAYERS_LIST = list of all online players
+# WORLDS_LIST = list of all worlds in the server
+# MATERIAL_LIST = list of all materials
 
-  examplecommand2:
-    permission: "" # EMPTY = NO PERMISSION
+commands:
+  example:
+    permission: "examplecommand.tabcomplete"
     arg-1:
       - "get"
       - "give"
     arg-2:
+      - MATERIAL_LIST
+    arg-3:
       - PLAYERS_LIST
+
+  example_2:
+    permission: "" # EMPTY = NO PERMISSION
+    arg-1:
+      - "selworld"
+    arg-2:
+      - WORLDS_LIST
