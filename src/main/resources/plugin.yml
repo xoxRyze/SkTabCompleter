@@ -1,0 +1,13 @@
+name: SkTabCompleter
+version: 1.0.0
+
+main: it.xoxryze.skTabCompleter.SkTabCompleter
+api-version: '1.21.1'
+depend:
+  - Skript
+
+authors: [ RyZeeTheBest ]
+
+commands:
+  sktabcompleter:
+    permission: sktabcompleter.command

@@ -1,0 +1,13 @@
+commands:
+  examplecommand:
+    permission: "examplecommand.tabcomplete"
+    arg-1:
+      - PLAYERS_LIST # PLAYERS_LIST RETURN THE LIST OF ALL ONLINE PLAYERS
+
+  examplecommand2:
+    permission: "" # EMPTY = NO PERMISSION
+    arg-1:
+      - "get"
+      - "give"
+    arg-2:
+      - PLAYERS_LIST
