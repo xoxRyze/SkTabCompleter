@@ -10,7 +10,7 @@ public class ConfigManager {
 
     private final SkTabCompleter main;
 
-    List<String> commands = new ArrayList<>();
+    private final List<String> commands = new ArrayList<>();
 
     public ConfigManager(SkTabCompleter main) {
         this.main = main;

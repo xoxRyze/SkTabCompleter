@@ -1,5 +1,6 @@
 package it.xoxryze.skTabCompleter.managers;
 
+import it.xoxryze.skTabCompleter.data.CacheManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
@@ -63,9 +64,19 @@ public class TabCompleterManager implements TabCompleter {
         }
 
         if (configured.remove("MATERIAL_LIST")) {
-            Arrays.stream(Material.values())
-                    .filter(m -> !m.isLegacy())
-                    .forEach(m -> completions.add(m.name().toLowerCase()));
+            configured.addAll(CacheManager.getMaterials());
+        }
+
+        if (configured.remove("ENCHANTMENTS_LIST")) {
+            configured.addAll(CacheManager.getEnchantments());
+        }
+
+        if (configured.remove("POTION_EFFECTS_LIST")) {
+            configured.addAll(CacheManager.getPotionEffects());
+        }
+
+        if (configured.remove("ENTITY_TYPES_LIST")) {
+            configured.addAll(CacheManager.getEntityTypes());
         }
 
         completions.addAll(configured);

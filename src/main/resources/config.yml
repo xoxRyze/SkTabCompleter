@@ -1,11 +1,18 @@
-# PLACEHOLDERS FOR ARGUMETS
+# PLACEHOLDERS FOR ARGUMENTS
 #
 # PLAYERS_LIST = list of all online players
 # WORLDS_LIST = list of all worlds in the server
 # MATERIAL_LIST = list of all materials
+# ENCHANTMENTS_LIST = list of all enchantments
+# POTION_EFFECTS_LIST = list of all potion effects
+# ENTITY_TYPES_LIST = list of all entity types
+#
 
 commands:
   example:
+    aliases:
+      - examplealias_1
+      - examplealias_2
     permission: "examplecommand.tabcomplete"
     arg-1:
       - "get"
@@ -14,8 +21,13 @@ commands:
       - MATERIAL_LIST
     arg-3:
       - PLAYERS_LIST
+    arg-4:
+      - ENCHANTMENTS_LIST
 
   example_2:
+    aliases:
+      - examplecommand
+      - worldexample
     permission: "" # EMPTY = NO PERMISSION
     arg-1:
       - "selworld"

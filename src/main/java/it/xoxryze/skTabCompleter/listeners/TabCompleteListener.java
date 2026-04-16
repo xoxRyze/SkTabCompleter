@@ -22,9 +22,9 @@ public class TabCompleteListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onTabComplete(TabCompleteEvent event) {
-        String command = event.getEventName();
-        if (!configManager.commandExist(command.toLowerCase())) return;
         String buffer = event.getBuffer();
+
+        if (!configManager.commandExist(buffer.toLowerCase())) return;
 
         if (!buffer.startsWith("/")) return;
 
