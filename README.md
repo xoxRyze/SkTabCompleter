@@ -23,9 +23,6 @@ An addon for the Skript Minecraft plugin that adds simple tab completion for com
 
 commands:
   example:
-    aliases:
-      - examplealias_1
-      - examplealias_2
     permission: "examplecommand.tabcomplete"
     arg-1:
       - "get"
@@ -38,9 +35,6 @@ commands:
       - ENCHANTMENTS_LIST
 
   example_2:
-    aliases:
-      - examplecommand
-      - worldexample
     permission: "" # EMPTY = NO PERMISSION
     arg-1:
       - "selworld"
