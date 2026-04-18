@@ -66,7 +66,7 @@ public final class SkTabCompleter extends JavaPlugin {
     }
 
     private void initMetrics() {
-        Metrics metrics = new Metrics(this, 30816);
+        Metrics metrics = new Metrics(this, 30817);
     }
 
     public void reload() {
