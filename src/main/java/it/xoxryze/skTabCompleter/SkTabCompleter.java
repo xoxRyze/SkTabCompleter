@@ -6,6 +6,9 @@ import it.xoxryze.skTabCompleter.managers.ConfigManager;
 import it.xoxryze.skTabCompleter.listeners.TabCompleteListener;
 import it.xoxryze.skTabCompleter.managers.TabCompleterManager;
 import org.bukkit.Bukkit;
+import org.bukkit.command.Command;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -59,18 +62,12 @@ public final class SkTabCompleter extends JavaPlugin {
     }
 
     private void registerTabCompleterOnCommand(String cmdName) {
-        org.bukkit.command.SimpleCommandMap map;
-        try {
-            java.lang.reflect.Field field = Bukkit.getServer().getClass().getDeclaredField("commandMap");
-            field.setAccessible(true);
-            map = (org.bukkit.command.SimpleCommandMap) field.get(Bukkit.getServer());
-            org.bukkit.command.Command cmd = map.getCommand(cmdName);
-            if (cmd instanceof org.bukkit.command.PluginCommand pc) {
-                pc.setTabCompleter(tabCompleterManager);
-            }
-        } catch (Exception e) {
-            getLogger().warning(
-                    "An error occurred while registring tabcompleter for /" + cmdName);
+        SimpleCommandMap map = (SimpleCommandMap) Bukkit.getCommandMap();
+        Command cmd = map.getCommand(cmdName);
+        if (cmd instanceof PluginCommand pc) {
+            pc.setTabCompleter(tabCompleterManager);
+        } else {
+            getLogger().warning("Could not register tab completer for /" + cmdName);
         }
     }
 

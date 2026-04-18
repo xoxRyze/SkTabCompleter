@@ -2,7 +2,6 @@ package it.xoxryze.skTabCompleter.managers;
 
 import it.xoxryze.skTabCompleter.data.CacheManager;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
@@ -12,10 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class TabCompleterManager implements TabCompleter {
 
@@ -38,7 +35,6 @@ public class TabCompleterManager implements TabCompleter {
                                                  @NotNull String[] args) {
 
         if (!configManager.commandExist(cmdName)) return Collections.emptyList();
-
         if (!(sender instanceof Player player)) return Collections.emptyList();
 
         String permission = configManager.getPermission(cmdName);
@@ -47,37 +43,29 @@ public class TabCompleterManager implements TabCompleter {
         ConfigurationSection section = configManager.getSection(cmdName);
         if (section == null) return Collections.emptyList();
 
-        int argIndex = args.length > 0 ? args.length : 1;
-        String argKey = "arg-" + argIndex;
-
+        String argKey = "arg-" + (args.length > 0 ? args.length : 1);
         if (!section.contains(argKey)) return Collections.emptyList();
 
         List<String> configured = new ArrayList<>(section.getStringList(argKey));
         List<String> completions = new ArrayList<>();
 
-        if (configured.remove("PLAYERS_LIST")) {
+        if (configured.remove("PLAYERS_LIST"))
             Bukkit.getOnlinePlayers().forEach(p -> completions.add(p.getName()));
-        }
 
-        if (configured.remove("WORLDS_LIST")) {
-            Bukkit.getWorlds().forEach(world -> completions.add(world.getName()));
-        }
+        if (configured.remove("WORLDS_LIST"))
+            Bukkit.getWorlds().forEach(w -> completions.add(w.getName()));
 
-        if (configured.remove("MATERIAL_LIST")) {
-            configured.addAll(CacheManager.getMaterials());
-        }
+        if (configured.remove("MATERIAL_LIST"))
+            completions.addAll(CacheManager.getMaterials());
 
-        if (configured.remove("ENCHANTMENTS_LIST")) {
-            configured.addAll(CacheManager.getEnchantments());
-        }
+        if (configured.remove("ENCHANTMENTS_LIST"))
+            completions.addAll(CacheManager.getEnchantments());
 
-        if (configured.remove("POTION_EFFECTS_LIST")) {
-            configured.addAll(CacheManager.getPotionEffects());
-        }
+        if (configured.remove("POTION_EFFECTS_LIST"))
+            completions.addAll(CacheManager.getPotionEffects());
 
-        if (configured.remove("ENTITY_TYPES_LIST")) {
-            configured.addAll(CacheManager.getEntityTypes());
-        }
+        if (configured.remove("ENTITY_TYPES_LIST"))
+            completions.addAll(CacheManager.getEntityTypes());
 
         completions.addAll(configured);
 
@@ -85,6 +73,6 @@ public class TabCompleterManager implements TabCompleter {
 
         return completions.stream()
                 .filter(s -> s.toLowerCase().startsWith(currentArg))
-                .collect(Collectors.toList());
+                .toList();
     }
 }

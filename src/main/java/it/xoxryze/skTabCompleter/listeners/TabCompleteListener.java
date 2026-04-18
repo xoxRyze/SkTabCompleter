@@ -7,7 +7,6 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.TabCompleteEvent;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class TabCompleteListener implements Listener {
@@ -23,17 +22,14 @@ public class TabCompleteListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onTabComplete(TabCompleteEvent event) {
         String buffer = event.getBuffer();
-
-        if (!configManager.commandExist(buffer.toLowerCase())) return;
-
         if (!buffer.startsWith("/")) return;
 
         String[] parts = buffer.substring(1).split(" ", -1);
-        String cmdName = parts[0].toLowerCase();
 
-        if (cmdName.contains(":")) {
-            cmdName = cmdName.substring(cmdName.indexOf(':') + 1);
-        }
+        String cmdName = parts[0].toLowerCase();
+        if (cmdName.contains(":")) cmdName = cmdName.substring(cmdName.indexOf(':') + 1);
+
+        if (!configManager.commandExist(cmdName)) return;
 
         int argsCount = parts.length - 1;
         String[] args = new String[argsCount > 0 ? argsCount : 1];
@@ -49,4 +45,3 @@ public class TabCompleteListener implements Listener {
         }
     }
 }
-
