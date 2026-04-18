@@ -55,4 +55,5 @@ commands:
  
 ##
 ![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge\&logo=java\&logoColor=white)
-![Spigot/Bukkit](https://img.shields.io/badge/SpigotMC-F47B20?style=for-the-badge\&logo=apachemaven\&logoColor=white)
+![Spigot/Bukkit](https://img.shields.io/badge/SpigotMC-F47B20?style=for-the-badge\&logo=apachemaven\&logoColor=white)    
+![Downloads](https://img.shields.io/github/downloads/xoxRyze/SkTabCompleter/total?style=for-the-badge)
