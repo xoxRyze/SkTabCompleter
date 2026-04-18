@@ -1,6 +1,7 @@
 package it.xoxryze.skTabCompleter;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.bstats.bukkit.Metrics;
 import it.xoxryze.skTabCompleter.commands.SkTabCompleterCommand;
 import it.xoxryze.skTabCompleter.managers.ConfigManager;
 import it.xoxryze.skTabCompleter.listeners.TabCompleteListener;
@@ -24,6 +25,7 @@ public final class SkTabCompleter extends JavaPlugin {
         initManagers();
         initListeners();
         initCommands();
+        initMetrics();
         SkTabCompleterCommand skTabCompleterCommand = new SkTabCompleterCommand(this);
         getCommand("sktabcompleter").setExecutor(skTabCompleterCommand);
         getCommand("sktabcompleter").setTabCompleter(skTabCompleterCommand);
@@ -36,15 +38,6 @@ public final class SkTabCompleter extends JavaPlugin {
     @Override
     public void onDisable() {
         getLogger().info("SkTabCompleter has been disabled.");
-    }
-
-    public void reload() {
-        reloadConfig();
-        configManager.clearCommands();
-        initCommands();
-        for (String cmdName : configManager.getCommands()) {
-            registerTabCompleterOnCommand(cmdName);
-        }
     }
 
     private void initCommands() {
@@ -61,16 +54,6 @@ public final class SkTabCompleter extends JavaPlugin {
         }
     }
 
-    private void registerTabCompleterOnCommand(String cmdName) {
-        SimpleCommandMap map = (SimpleCommandMap) Bukkit.getCommandMap();
-        Command cmd = map.getCommand(cmdName);
-        if (cmd instanceof PluginCommand pc) {
-            pc.setTabCompleter(tabCompleterManager);
-        } else {
-            getLogger().warning("Could not register tab completer for /" + cmdName);
-        }
-    }
-
     private void initListeners() {
         getLogger().info("Initializing listeners...");
         getServer().getPluginManager().registerEvents(new TabCompleteListener(tabCompleterManager, configManager), this);
@@ -80,6 +63,29 @@ public final class SkTabCompleter extends JavaPlugin {
         getLogger().info("Initializing managers...");
         configManager = new ConfigManager(this);
         tabCompleterManager = new TabCompleterManager(configManager);
+    }
+
+    private void initMetrics() {
+        Metrics metrics = new Metrics(this, 30816);
+    }
+
+    public void reload() {
+        reloadConfig();
+        configManager.clearCommands();
+        initCommands();
+        for (String cmdName : configManager.getCommands()) {
+            registerTabCompleterOnCommand(cmdName);
+        }
+    }
+
+    private void registerTabCompleterOnCommand(String cmdName) {
+        SimpleCommandMap map = (SimpleCommandMap) Bukkit.getCommandMap();
+        Command cmd = map.getCommand(cmdName);
+        if (cmd instanceof PluginCommand pc) {
+            pc.setTabCompleter(tabCompleterManager);
+        } else {
+            getLogger().warning("Could not register tab completer for /" + cmdName);
+        }
     }
 
     private boolean checkSkript() {
