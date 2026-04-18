@@ -2,6 +2,8 @@
 
 An addon for the Skript Minecraft plugin that adds simple tab completion for commands created with the Skript language. For Minecraft server (Spigot/Paper).
 
+<b>Version:</b> 1.21.1+
+
 > **Note:** This plugin require [Skript](https://github.com/SkriptLang/Skript/releases) to Work.  
 > For suggestions or bug reports, contact me on [Telegram](https://t.me/xoxRyze) or [Discord](https://discord.com/users/746303863975575563).
 
