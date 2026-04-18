@@ -4,6 +4,7 @@ import it.xoxryze.skTabCompleter.SkTabCompleter;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,30 +32,17 @@ public class SkTabCompleterCommand implements CommandExecutor, TabCompleter {
                              @NotNull String label,
                              @NotNull String[] args) {
 
-        if (sender instanceof Player player && !player.hasPermission("sktabcompleter.command.reload")) {
-            player.sendMessage(Component.text("§cYou don't have the permission!"));
-            return true;
-        }
-
         if (args.length != 1) {
-            sender.sendMessage(Component.empty());
-            sender.sendMessage(Component.text(
-                    String.format(" §b§lSkTabCompleter§b v%s by RyZeeTheBest", main.getPluginMeta().getVersion())).hoverEvent(
-                    HoverEvent.showText(Component.text("§7Click to get my GitHub account!")))
-                    .clickEvent(ClickEvent.openUrl("https://github.com/xoxRyze")));
-            sender.sendMessage(Component.text("§b /sktabcompleter commands").hoverEvent(
-                    HoverEvent.showText(Component.text("§7View configured commands"))
-            ));
-            sender.sendMessage(Component.text(
-                    "§b /sktabcompleter reload").hoverEvent(HoverEvent.showText(
-                    Component.text("§7Reload configuration file")
-            )));
-            sender.sendMessage(Component.empty());
+           sendHelp(sender);
             return true;
         }
 
         switch (args[0].toLowerCase()) {
             case "reload":
+                if (!sender.hasPermission("sktabcompleter.command.reload")) {
+                    sender.sendMessage(Component.text("§cYou don't have the permission to do it!"));
+                    return true;
+                }
                 long now = System.currentTimeMillis();
                 main.reload();
                 long end = System.currentTimeMillis();
@@ -62,6 +50,10 @@ public class SkTabCompleterCommand implements CommandExecutor, TabCompleter {
                         String.format("§aConfigurations reloaded in §e%s ms§a!", end-now)));
                 break;
             case "commands":
+                if (!sender.hasPermission("sktabcompleter.command.commands")) {
+                    sender.sendMessage(Component.text("§cYou don't have the permission to do it!"));
+                    return true;
+                }
                 sender.sendMessage(Component.empty());
                 sender.sendMessage(Component.text(" §b§lConfigured Commands"));
                 for (String cmd : main.getConfigManager().getCommands()) {
@@ -79,6 +71,20 @@ public class SkTabCompleterCommand implements CommandExecutor, TabCompleter {
         }
 
         return true;
+    }
+
+    private void sendHelp(CommandSender player) {
+        TextColor color = TextColor.color(24, 187, 229);
+        player.sendMessage(Component.empty());
+        player.sendMessage(Component.text("\uD83D\uDEC8 /sktabcompleter", color)
+                .hoverEvent(HoverEvent.showText(Component.text("§7Click to view SkTabCompleter GitGub page")))
+                .clickEvent(ClickEvent.openUrl("https://github.com/xoxRyze/SkTabCompleter")));
+        player.sendMessage(Component.text(" /sktabcompleter commands", color)
+                .hoverEvent(HoverEvent.showText(Component.text("§7Visualizza i comandi configurati"))));
+        player.sendMessage(Component.text(" /sktabcompleter reload", color)
+                .hoverEvent(HoverEvent.showText(Component.text("§7Ricarica le configurazioni"))));
+        player.sendMessage(Component.empty());
+        return;
     }
 
     @Override
