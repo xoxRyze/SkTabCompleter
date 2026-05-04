@@ -15,6 +15,7 @@ An addon for the Skript Minecraft plugin that adds simple tab completion for com
 ```yml
 # PLACEHOLDERS FOR ARGUMENTS
 #
+# OFFLINE_PLAYERS_LIST = list of all online and offline players
 # PLAYERS_LIST = list of all online players
 # WORLDS_LIST = list of all worlds in the server
 # MATERIAL_LIST = list of all materials
