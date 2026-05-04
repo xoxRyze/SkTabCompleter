@@ -1,6 +1,7 @@
 package it.xoxryze.skTabCompleter.commands;
 
 import it.xoxryze.skTabCompleter.SkTabCompleter;
+import it.xoxryze.skTabCompleter.utils.Permission;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -8,17 +9,9 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import javax.net.ssl.HostnameVerifier;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
-public class SkTabCompleterCommand implements CommandExecutor, TabCompleter {
+public class SkTabCompleterCommand implements CommandExecutor {
 
     private final SkTabCompleter main;
 
@@ -39,7 +32,7 @@ public class SkTabCompleterCommand implements CommandExecutor, TabCompleter {
 
         switch (args[0].toLowerCase()) {
             case "reload":
-                if (!sender.hasPermission("sktabcompleter.command.reload")) {
+                if (!Permission.hasCMDPermission(sender, "reload")) {
                     sender.sendMessage(Component.text("§cYou don't have the permission to do it!"));
                     return true;
                 }
@@ -50,18 +43,33 @@ public class SkTabCompleterCommand implements CommandExecutor, TabCompleter {
                         String.format("§aConfigurations reloaded in §e%s ms§a!", end-now)));
                 break;
             case "commands":
-                if (!sender.hasPermission("sktabcompleter.command.commands")) {
+                if (!Permission.hasCMDPermission(sender, "commands")) {
                     sender.sendMessage(Component.text("§cYou don't have the permission to do it!"));
                     return true;
                 }
+                if (main.getConfigManager().getCommands().isEmpty()) {
+                    sender.sendMessage(Component.text("§cThere is no command configured!"));
+                    return true;
+                }
                 sender.sendMessage(Component.empty());
-                sender.sendMessage(Component.text(" §b§lConfigured Commands"));
+                sender.sendMessage(Component.text(String.format(
+                        " §b§lConfigured Commands §7(%s)", main.getConfigManager().getCommands().size())));
                 for (String cmd : main.getConfigManager().getCommands()) {
-                    if (cmd.isEmpty()) {
-                        sender.sendMessage(Component.text("§cNessun comando configurato!"));
-                        break;
+
+                    StringBuilder hover = new StringBuilder("§7/" + cmd);
+                    org.bukkit.configuration.ConfigurationSection section = main.getConfigManager().getSection(cmd);
+                    if (section != null) {
+                        int argIndex = 1;
+                        while (section.contains("arg-" + argIndex)) {
+                            java.util.List<String> argValues = section.getStringList("arg-" + argIndex);
+                            if (!argValues.isEmpty()) {
+                                hover.append(" §7<§f").append(String.join("§7 | §f", argValues)).append("§7>");
+                            }
+                            argIndex++;
+                        }
                     }
-                    sender.sendMessage(Component.text(" §8» §7/" + cmd));
+                    sender.sendMessage(Component.text(" §8» §7/" + cmd)
+                            .hoverEvent(HoverEvent.showText(Component.text(hover.toString()))));
                 }
                 sender.sendMessage(Component.empty());
                 break;
@@ -80,29 +88,11 @@ public class SkTabCompleterCommand implements CommandExecutor, TabCompleter {
                 .hoverEvent(HoverEvent.showText(Component.text("§7Click to view SkTabCompleter GitGub page")))
                 .clickEvent(ClickEvent.openUrl("https://github.com/xoxRyze/SkTabCompleter")));
         player.sendMessage(Component.text(" /sktabcompleter commands", color)
-                .hoverEvent(HoverEvent.showText(Component.text("§7Visualizza i comandi configurati"))));
+                .hoverEvent(HoverEvent.showText(Component.text("§7View configured commands"))));
         player.sendMessage(Component.text(" /sktabcompleter reload", color)
-                .hoverEvent(HoverEvent.showText(Component.text("§7Ricarica le configurazioni"))));
+                .hoverEvent(HoverEvent.showText(Component.text("§7Reload configurations"))));
         player.sendMessage(Component.empty());
         return;
     }
 
-    @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
-                                                @NotNull Command command,
-                                                @NotNull String label,
-                                                @NotNull String[] args) {
-
-        List<String> completions = new ArrayList<>();
-
-        if (!(sender instanceof Player)) return Collections.emptyList();
-
-        if (args.length == 1) {
-            completions.add("reload");
-            completions.add("commands");
-            return completions;
-        }
-
-        return Collections.emptyList();
-    }
 }

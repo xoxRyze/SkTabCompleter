@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -48,6 +49,9 @@ public class TabCompleterManager implements TabCompleter {
 
         List<String> configured = new ArrayList<>(section.getStringList(argKey));
         List<String> completions = new ArrayList<>();
+
+        if (configured.remove("OFFLINE_PLAYERS_LIST"))
+            Arrays.stream(Bukkit.getOfflinePlayers()).toList().forEach(w -> completions.add(w.getName()));
 
         if (configured.remove("PLAYERS_LIST"))
             Bukkit.getOnlinePlayers().forEach(p -> completions.add(p.getName()));

@@ -3,6 +3,7 @@ package it.xoxryze.skTabCompleter;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bstats.bukkit.Metrics;
 import it.xoxryze.skTabCompleter.commands.SkTabCompleterCommand;
+import it.xoxryze.skTabCompleter.commands.SkTabCompleterTabCompleter;
 import it.xoxryze.skTabCompleter.managers.ConfigManager;
 import it.xoxryze.skTabCompleter.listeners.TabCompleteListener;
 import it.xoxryze.skTabCompleter.managers.TabCompleterManager;
@@ -24,15 +25,14 @@ public final class SkTabCompleter extends JavaPlugin {
         if (!checkSkript()) return;
         initManagers();
         initListeners();
-        initCommands();
+        Bukkit.getScheduler().runTaskLater(this, this::initCommands, 20L * 5);
         initMetrics();
-        SkTabCompleterCommand skTabCompleterCommand = new SkTabCompleterCommand(this);
-        getCommand("sktabcompleter").setExecutor(skTabCompleterCommand);
-        getCommand("sktabcompleter").setTabCompleter(skTabCompleterCommand);
+        getCommand("sktabcompleter").setExecutor(new SkTabCompleterCommand(this));
+        getCommand("sktabcompleter").setTabCompleter(new SkTabCompleterTabCompleter());
         for (String cmdName : configManager.getCommands()) {
             registerTabCompleterOnCommand(cmdName);
         }
-        getLogger().info("SkTabCompleter has been enabled!");
+        getLogger().info("SkTabCompleter v" + getDescription().getVersion() + " has been enabled!");
     }
 
     @Override
@@ -46,11 +46,12 @@ public final class SkTabCompleter extends JavaPlugin {
         if (section != null) {
             for (String commandName : section.getKeys(false)) {
                 if (Skript.getInstance().getCommand(commandName) != null) {
-                    configManager.addCommand(commandName);
+                    configManager.addCommand(commandName);;
                 } else {
                     getLogger().warning("Skript command '" + commandName + "' not found.");
                 }
             }
+            getLogger().info("Loaded " + configManager.getCommands().size() + " commands");
         }
     }
 
@@ -102,8 +103,5 @@ public final class SkTabCompleter extends JavaPlugin {
         return configManager;
     }
 
-    public TabCompleterManager getTabCompleterManager() {
-        return tabCompleterManager;
-    }
 }
 

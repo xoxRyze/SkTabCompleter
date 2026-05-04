@@ -1,5 +1,5 @@
 name: SkTabCompleter
-version: 1.0.0
+version: 1.0.1
 
 main: it.xoxryze.skTabCompleter.SkTabCompleter
 api-version: '1.21.1'
@@ -7,6 +7,7 @@ depend:
   - Skript
 
 authors: [ RyZeeTheBest ]
+load: POSTWORLD
 
 commands:
   sktabcompleter:
