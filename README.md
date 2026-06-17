@@ -66,7 +66,8 @@ commands:
 * `/sktabcompleter reload` » `sktabcompleter.command.reload`
 * `/sktabcompleter commands` » `sktabcompleter.command.commands`
  
-##
-![Java](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge\&logo=java\&logoColor=white)
-![Spigot/Bukkit](https://img.shields.io/badge/SpigotMC-F47B20?style=for-the-badge\&logo=apachemaven\&logoColor=white)    
+##   
 ![Downloads](https://img.shields.io/github/downloads/xoxRyze/SkTabCompleter/total?style=for-the-badge)
+[![Servers](https://img.shields.io/bstats/servers/30817?style=for-the-badge)](https://bstats.org/plugin/bukkit/SkTabCompleter/30817)
+[![Players](https://img.shields.io/bstats/players/30817?style=for-the-badge)](https://bstats.org/plugin/bukkit/SkTabCompleter/30817)
+
