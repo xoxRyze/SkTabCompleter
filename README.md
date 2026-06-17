@@ -67,7 +67,8 @@ commands:
 * `/sktabcompleter commands` » `sktabcompleter.command.commands`
  
 ##   
+[![bStats Graph](https://bstats.org/signatures/bukkit/SkTabCompleter.svg)](https://bstats.org/plugin/bukkit/SkTabCompleter/30817)
+
+##
 ![Downloads](https://img.shields.io/github/downloads/xoxRyze/SkTabCompleter/total?style=for-the-badge)
-[![Servers](https://img.shields.io/bstats/servers/30817?style=for-the-badge)](https://bstats.org/plugin/bukkit/SkTabCompleter/30817)
-[![Players](https://img.shields.io/bstats/players/30817?style=for-the-badge)](https://bstats.org/plugin/bukkit/SkTabCompleter/30817)
 
