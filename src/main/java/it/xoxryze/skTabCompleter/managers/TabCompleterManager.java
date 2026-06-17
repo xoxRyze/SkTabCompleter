@@ -71,6 +71,23 @@ public class TabCompleterManager implements TabCompleter {
         if (configured.remove("ENTITY_TYPES_LIST"))
             completions.addAll(CacheManager.getEntityTypes());
 
+        List<String> placeholders = configured.stream()
+                .filter(s -> s.startsWith("PLACEHOLDER:"))
+                .toList();
+        configured.removeAll(placeholders);
+
+        if (PlaceholderManager.isEnabled()) {
+            for (String entry : placeholders) {
+                String rawPlaceholder = entry.substring("PLACEHOLDER:".length());
+                String expanded = PlaceholderManager.getPlaceholder(rawPlaceholder, player);
+                if (expanded.contains(",")) {
+                    completions.addAll(Arrays.asList(expanded.split(",")));
+                } else {
+                    completions.add(expanded);
+                }
+            }
+        }
+
         completions.addAll(configured);
 
         String currentArg = args.length > 0 ? args[args.length - 1].toLowerCase() : "";

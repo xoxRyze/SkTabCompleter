@@ -8,12 +8,14 @@ repositories {
     mavenCentral()
     maven("https://repo.papermc.io/repository/maven-public/")
     maven("https://repo.skriptlang.org/releases")
+    maven("https://repo.extendedclip.com/releases/")
 }
 
 dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.1-R0.1-SNAPSHOT")
     implementation("com.github.SkriptLang:Skript:2.14.3")
     implementation("org.bstats:bstats-bukkit:3.2.1")
+    compileOnly("me.clip:placeholderapi:2.12.2")
 }
 
 java {

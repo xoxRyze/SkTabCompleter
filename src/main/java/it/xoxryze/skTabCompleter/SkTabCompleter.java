@@ -4,9 +4,12 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.bstats.bukkit.Metrics;
 import it.xoxryze.skTabCompleter.commands.SkTabCompleterCommand;
 import it.xoxryze.skTabCompleter.commands.SkTabCompleterTabCompleter;
+import it.xoxryze.skTabCompleter.listeners.PlayerJoinListener;
 import it.xoxryze.skTabCompleter.managers.ConfigManager;
 import it.xoxryze.skTabCompleter.listeners.TabCompleteListener;
+import it.xoxryze.skTabCompleter.managers.PlaceholderManager;
 import it.xoxryze.skTabCompleter.managers.TabCompleterManager;
+import it.xoxryze.skTabCompleter.utils.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
@@ -18,6 +21,7 @@ public final class SkTabCompleter extends JavaPlugin {
 
     private ConfigManager configManager;
     private TabCompleterManager tabCompleterManager;
+    private UpdateChecker updateChecker;
 
     @Override
     public void onEnable() {
@@ -27,6 +31,12 @@ public final class SkTabCompleter extends JavaPlugin {
         initListeners();
         Bukkit.getScheduler().runTaskLater(this, this::initCommands, 20L * 5);
         initMetrics();
+        initUpdateChecker();
+        if (checkPapi()) {
+            initPapi();
+        } else {
+            getLogger().info("PlaceholderAPI not found. All the functions with placeholders will be disabled.");
+        }
         getCommand("sktabcompleter").setExecutor(new SkTabCompleterCommand(this));
         getCommand("sktabcompleter").setTabCompleter(new SkTabCompleterTabCompleter());
         for (String cmdName : configManager.getCommands()) {
@@ -46,7 +56,7 @@ public final class SkTabCompleter extends JavaPlugin {
         if (section != null) {
             for (String commandName : section.getKeys(false)) {
                 if (Skript.getInstance().getCommand(commandName) != null) {
-                    configManager.addCommand(commandName);;
+                    configManager.addCommand(commandName);
                 } else {
                     getLogger().warning("Skript command '" + commandName + "' not found.");
                 }
@@ -68,6 +78,22 @@ public final class SkTabCompleter extends JavaPlugin {
 
     private void initMetrics() {
         Metrics metrics = new Metrics(this, 30817);
+    }
+
+    private void initUpdateChecker() {
+        updateChecker = new UpdateChecker(this);
+        updateChecker.check();
+        getServer().getPluginManager().registerEvents(new PlayerJoinListener(this, updateChecker), this);
+    }
+
+    private boolean checkPapi() {
+        getLogger().info("Checking for PlaceholderAPI presence...");
+        return getServer().getPluginManager().getPlugin("PlaceholderAPI") != null;
+    }
+
+    private void initPapi() {
+        PlaceholderManager.setEnabled(true);
+        getLogger().info("PlaceholderAPI found! Placeholder functions have been enabled.");
     }
 
     public void reload() {
@@ -104,4 +130,3 @@ public final class SkTabCompleter extends JavaPlugin {
     }
 
 }
-

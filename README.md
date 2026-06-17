@@ -15,12 +15,15 @@ An addon for the Skript Minecraft plugin that adds simple tab completion for com
 ```yml
 # PLACEHOLDERS FOR ARGUMENTS
 #
+# OFFLINE_PLAYERS_LIST = list of all online and offline players
 # PLAYERS_LIST = list of all online players
 # WORLDS_LIST = list of all worlds in the server
 # MATERIAL_LIST = list of all materials
 # ENCHANTMENTS_LIST = list of all enchantments
 # POTION_EFFECTS_LIST = list of all potion effects
 # ENTITY_TYPES_LIST = list of all entity types
+# PLACEHOLDER:%<placeholder>% = a PlaceholderAPI placeholder for the player executing the command
+#                      (requires PlaceholderAPI 2.12.2+). Example: "PLACEHOLDER:%player_name%"
 #
 
 commands:
@@ -42,6 +45,14 @@ commands:
       - "selworld"
     arg-2:
       - WORLDS_LIST
+    arg-3:
+      - OFFLINE_PLAYERS_LIST
+
+  example_3:
+    permission: ""
+    arg-1:
+      - "PLACEHOLDER:%team_name%"
+      - "@e"
 ```
 </details>
 

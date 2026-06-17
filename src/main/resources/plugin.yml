@@ -1,10 +1,12 @@
 name: SkTabCompleter
-version: 1.0.1
+version: 1.1.0
 
 main: it.xoxryze.skTabCompleter.SkTabCompleter
 api-version: '1.21.1'
 depend:
   - Skript
+softdepend:
+  - PlaceholderAPI
 
 authors: [ RyZeeTheBest ]
 load: POSTWORLD

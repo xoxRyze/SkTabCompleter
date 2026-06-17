@@ -1,3 +1,5 @@
+# SkTabCompleter - Config generated in v1.1.0
+#
 # PLACEHOLDERS FOR ARGUMENTS
 #
 # OFFLINE_PLAYERS_LIST = list of all online and offline players
@@ -7,6 +9,8 @@
 # ENCHANTMENTS_LIST = list of all enchantments
 # POTION_EFFECTS_LIST = list of all potion effects
 # ENTITY_TYPES_LIST = list of all entity types
+# PLACEHOLDER:%<placeholder>% = a PlaceholderAPI placeholder for the player executing the command
+#                      (requires PlaceholderAPI 2.12.2+). Example: "PLACEHOLDER:%player_name%"
 #
 
 commands:
@@ -30,3 +34,9 @@ commands:
       - WORLDS_LIST
     arg-3:
       - OFFLINE_PLAYERS_LIST
+
+  example_3:
+    permission: ""
+    arg-1:
+      - "PLACEHOLDER:%team_name%"
+      - "@e"

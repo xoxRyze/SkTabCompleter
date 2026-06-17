@@ -15,7 +15,7 @@ public enum Permission {;
         return hasPermission((Player) sender, COMMAND_PERMISSION + permission);
     }
 
-    private static boolean hasPermission(Player player, String permission) {
-        return player != null && player.hasPermission(permission);
+    public static boolean hasPermission(Player player, String permission) {
+        return player != null && player.hasPermission(PERMISSION_BASE + permission);
     }
 }
