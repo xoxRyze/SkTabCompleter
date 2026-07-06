@@ -2,6 +2,7 @@ package it.xoxryze.skTabCompleter;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.bstats.bukkit.Metrics;
+import it.xoxryze.skTabCompleter.api.SkTabCompleterAPI;
 import it.xoxryze.skTabCompleter.commands.SkTabCompleterCommand;
 import it.xoxryze.skTabCompleter.commands.SkTabCompleterTabCompleter;
 import it.xoxryze.skTabCompleter.listeners.PlayerJoinListener;
@@ -17,11 +18,10 @@ import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class SkTabCompleter extends JavaPlugin {
+public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAPI {
 
     private ConfigManager configManager;
     private TabCompleterManager tabCompleterManager;
-    private UpdateChecker updateChecker;
 
     @Override
     public void onEnable() {
@@ -81,7 +81,7 @@ public final class SkTabCompleter extends JavaPlugin {
     }
 
     private void initUpdateChecker() {
-        updateChecker = new UpdateChecker(this);
+        UpdateChecker updateChecker = new UpdateChecker(this);
         updateChecker.check();
         getServer().getPluginManager().registerEvents(new PlayerJoinListener(this, updateChecker), this);
     }
@@ -96,6 +96,7 @@ public final class SkTabCompleter extends JavaPlugin {
         getLogger().info("PlaceholderAPI found! Placeholder functions have been enabled.");
     }
 
+    @Override
     public void reload() {
         reloadConfig();
         configManager.clearCommands();
@@ -105,7 +106,8 @@ public final class SkTabCompleter extends JavaPlugin {
         }
     }
 
-    private void registerTabCompleterOnCommand(String cmdName) {
+    @Override
+    public void registerTabCompleterOnCommand(String cmdName) {
         SimpleCommandMap map = (SimpleCommandMap) Bukkit.getCommandMap();
         Command cmd = map.getCommand(cmdName);
         if (cmd instanceof PluginCommand pc) {
@@ -125,8 +127,14 @@ public final class SkTabCompleter extends JavaPlugin {
         return true;
     }
 
+    @Override
     public ConfigManager getConfigManager() {
         return configManager;
+    }
+
+    @Override
+    public TabCompleterManager getTabCompleterManager() {
+        return tabCompleterManager;
     }
 
 }

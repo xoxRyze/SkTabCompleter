@@ -22,6 +22,7 @@ An addon for the Skript Minecraft plugin that adds simple tab completion for com
 # ENCHANTMENTS_LIST = list of all enchantments
 # POTION_EFFECTS_LIST = list of all potion effects
 # ENTITY_TYPES_LIST = list of all entity types
+# SOUNDS_LIST = list of all sounds
 # PLACEHOLDER:%<placeholder>% = a PlaceholderAPI placeholder for the player executing the command
 #                      (requires PlaceholderAPI 2.12.2+). Example: "PLACEHOLDER:%player_name%"
 #

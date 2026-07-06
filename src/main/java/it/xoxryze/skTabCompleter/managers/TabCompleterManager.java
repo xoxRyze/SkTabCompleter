@@ -1,6 +1,6 @@
 package it.xoxryze.skTabCompleter.managers;
 
-import it.xoxryze.skTabCompleter.data.CacheManager;
+import it.xoxryze.skTabCompleter.cache.CacheManager;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -51,7 +51,7 @@ public class TabCompleterManager implements TabCompleter {
         List<String> completions = new ArrayList<>();
 
         if (configured.remove("OFFLINE_PLAYERS_LIST"))
-            Arrays.stream(Bukkit.getOfflinePlayers()).toList().forEach(w -> completions.add(w.getName()));
+            Arrays.stream(Bukkit.getOfflinePlayers()).toList().forEach(o -> completions.add(o.getName()));
 
         if (configured.remove("PLAYERS_LIST"))
             Bukkit.getOnlinePlayers().forEach(p -> completions.add(p.getName()));
@@ -70,6 +70,9 @@ public class TabCompleterManager implements TabCompleter {
 
         if (configured.remove("ENTITY_TYPES_LIST"))
             completions.addAll(CacheManager.getEntityTypes());
+
+        if (configured.remove("SOUNDS_LIST"))
+            completions.addAll(CacheManager.getSounds());
 
         List<String> placeholders = configured.stream()
                 .filter(s -> s.startsWith("PLACEHOLDER:"))
