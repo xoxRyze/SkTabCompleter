@@ -1,7 +1,8 @@
 package it.xoxryze.skTabCompleter.api;
 
-import it.xoxryze.skTabCompleter.managers.ConfigManager;
-import it.xoxryze.skTabCompleter.managers.TabCompleterManager;
+import it.xoxryze.skTabCompleter.api.managers.ConfigManager;
+import it.xoxryze.skTabCompleter.api.managers.PlaceholderManager;
+import it.xoxryze.skTabCompleter.api.managers.TabCompleterManager;
 
 public interface SkTabCompleterAPI {
     void reload();
@@ -11,4 +12,6 @@ public interface SkTabCompleterAPI {
     ConfigManager getConfigManager();
 
     TabCompleterManager getTabCompleterManager();
+
+    PlaceholderManager getPlaceholderManager();
 }

@@ -3,18 +3,20 @@ package it.xoxryze.skTabCompleter;
 import ch.njol.skript.Skript;
 import ch.njol.skript.bstats.bukkit.Metrics;
 import it.xoxryze.skTabCompleter.api.SkTabCompleterAPI;
+import it.xoxryze.skTabCompleter.api.managers.ConfigManager;
+import it.xoxryze.skTabCompleter.api.managers.PlaceholderManager;
+import it.xoxryze.skTabCompleter.api.managers.TabCompleterManager;
 import it.xoxryze.skTabCompleter.commands.SkTabCompleterCommand;
 import it.xoxryze.skTabCompleter.commands.SkTabCompleterTabCompleter;
 import it.xoxryze.skTabCompleter.listeners.PlayerJoinListener;
-import it.xoxryze.skTabCompleter.managers.ConfigManager;
+import it.xoxryze.skTabCompleter.managers.BaseConfigManager;
 import it.xoxryze.skTabCompleter.listeners.TabCompleteListener;
-import it.xoxryze.skTabCompleter.managers.PlaceholderManager;
-import it.xoxryze.skTabCompleter.managers.TabCompleterManager;
+import it.xoxryze.skTabCompleter.managers.BasePlaceholderManager;
+import it.xoxryze.skTabCompleter.managers.BaseTabCompleterManager;
 import it.xoxryze.skTabCompleter.utils.UpdateChecker;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.command.SimpleCommandMap;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -22,6 +24,7 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
 
     private ConfigManager configManager;
     private TabCompleterManager tabCompleterManager;
+    private PlaceholderManager placeholderManager;
 
     @Override
     public void onEnable() {
@@ -39,9 +42,6 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
         }
         getCommand("sktabcompleter").setExecutor(new SkTabCompleterCommand(this));
         getCommand("sktabcompleter").setTabCompleter(new SkTabCompleterTabCompleter());
-        for (String cmdName : configManager.getCommands()) {
-            registerTabCompleterOnCommand(cmdName);
-        }
         getLogger().info("SkTabCompleter v" + getDescription().getVersion() + " has been enabled!");
     }
 
@@ -63,17 +63,26 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
             }
             getLogger().info("Loaded " + configManager.getCommands().size() + " commands");
         }
+        registerAllTabCompleters();
+    }
+
+    private void registerAllTabCompleters() {
+        for (String name : configManager.getAllNames()) {
+            String key = configManager.resolveCommand(name);
+            registerTabCompleter(name, name.equalsIgnoreCase(key));
+        }
     }
 
     private void initListeners() {
         getLogger().info("Initializing listeners...");
-        getServer().getPluginManager().registerEvents(new TabCompleteListener(tabCompleterManager, configManager), this);
+        getServer().getPluginManager().registerEvents(new TabCompleteListener(this), this);
     }
 
     private void initManagers() {
         getLogger().info("Initializing managers...");
-        configManager = new ConfigManager(this);
-        tabCompleterManager = new TabCompleterManager(configManager);
+        configManager = new BaseConfigManager(this);
+        tabCompleterManager = new BaseTabCompleterManager(configManager);
+        placeholderManager = new BasePlaceholderManager(this);
     }
 
     private void initMetrics() {
@@ -92,7 +101,7 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
     }
 
     private void initPapi() {
-        PlaceholderManager.setEnabled(true);
+        BasePlaceholderManager.setEnabled(true);
         getLogger().info("PlaceholderAPI found! Placeholder functions have been enabled.");
     }
 
@@ -101,18 +110,19 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
         reloadConfig();
         configManager.clearCommands();
         initCommands();
-        for (String cmdName : configManager.getCommands()) {
-            registerTabCompleterOnCommand(cmdName);
-        }
     }
 
     @Override
     public void registerTabCompleterOnCommand(String cmdName) {
-        SimpleCommandMap map = (SimpleCommandMap) Bukkit.getCommandMap();
-        Command cmd = map.getCommand(cmdName);
+        registerTabCompleter(cmdName, true);
+    }
+
+    private void registerTabCompleter(String cmdName, boolean warn) {
+        Command cmd = Bukkit.getCommandMap().getCommand(cmdName);
         if (cmd instanceof PluginCommand pc) {
-            pc.setTabCompleter(tabCompleterManager);
-        } else {
+            pc.setTabCompleter((sender, command, label, args) ->
+                    tabCompleterManager.getCompletions(sender, command.getName().toLowerCase(), args));
+        } else if (warn) {
             getLogger().warning("Could not register tab completer for /" + cmdName);
         }
     }
@@ -137,4 +147,8 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
         return tabCompleterManager;
     }
 
+    @Override
+    public PlaceholderManager getPlaceholderManager() {
+        return placeholderManager;
+    }
 }

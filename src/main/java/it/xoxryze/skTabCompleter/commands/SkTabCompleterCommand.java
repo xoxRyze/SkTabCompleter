@@ -9,7 +9,10 @@ import net.kyori.adventure.text.format.TextColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class SkTabCompleterCommand implements CommandExecutor {
 
@@ -26,7 +29,7 @@ public class SkTabCompleterCommand implements CommandExecutor {
                              @NotNull String[] args) {
 
         if (args.length != 1) {
-           sendHelp(sender);
+            sendHelp(sender);
             return true;
         }
 
@@ -40,7 +43,7 @@ public class SkTabCompleterCommand implements CommandExecutor {
                 main.reload();
                 long end = System.currentTimeMillis();
                 sender.sendMessage(Component.text(
-                        String.format("§aConfigurations reloaded in §e%s ms§a!", end-now)));
+                        String.format("§aConfigurations reloaded in §e%s ms§a!", end - now)));
                 break;
             case "commands":
                 if (!Permission.hasCMDPermission(sender, "commands")) {
@@ -57,7 +60,7 @@ public class SkTabCompleterCommand implements CommandExecutor {
                 for (String cmd : main.getConfigManager().getCommands()) {
 
                     StringBuilder hover = new StringBuilder("§7/" + cmd);
-                    org.bukkit.configuration.ConfigurationSection section = main.getConfigManager().getSection(cmd);
+                    ConfigurationSection section = main.getConfigManager().getSection(cmd);
                     if (section != null) {
                         int argIndex = 1;
                         while (section.contains("arg-" + argIndex)) {
@@ -67,6 +70,10 @@ public class SkTabCompleterCommand implements CommandExecutor {
                             }
                             argIndex++;
                         }
+                    }
+                    List<String> aliases = main.getConfigManager().getAliases(cmd);
+                    if (!aliases.isEmpty()) {
+                        hover.append("\n§8Aliases: §7/").append(String.join("§8, §7/", aliases));
                     }
                     sender.sendMessage(Component.text(" §8» §7/" + cmd)
                             .hoverEvent(HoverEvent.showText(Component.text(hover.toString()))));

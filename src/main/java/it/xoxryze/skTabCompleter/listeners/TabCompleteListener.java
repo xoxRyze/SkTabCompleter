@@ -1,22 +1,30 @@
 package it.xoxryze.skTabCompleter.listeners;
 
-import it.xoxryze.skTabCompleter.managers.ConfigManager;
-import it.xoxryze.skTabCompleter.managers.TabCompleterManager;
+import it.xoxryze.skTabCompleter.SkTabCompleter;
+import it.xoxryze.skTabCompleter.api.managers.ConfigManager;
+import it.xoxryze.skTabCompleter.api.managers.TabCompleterManager;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.server.TabCompleteEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class TabCompleteListener implements Listener {
+public class TabCompleteListener implements Listener, TabCompleter {
 
+    private final SkTabCompleter main;
     private final TabCompleterManager tabCompleterManager;
     private final ConfigManager configManager;
 
-    public TabCompleteListener(TabCompleterManager tabCompleterManager, ConfigManager configManager) {
-        this.tabCompleterManager = tabCompleterManager;
-        this.configManager = configManager;
+    public TabCompleteListener(SkTabCompleter main) {
+        this.main = main;
+        this.tabCompleterManager = main.getTabCompleterManager();
+        this.configManager = main.getConfigManager();
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
@@ -44,4 +52,13 @@ public class TabCompleteListener implements Listener {
             event.setCompletions(completions);
         }
     }
+
+    @Override
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender,
+                                                @NotNull Command command,
+                                                @NotNull String label,
+                                                @NotNull String[] args) {
+        return tabCompleterManager.getCompletions(sender, command.getName().toLowerCase(), args);
+    }
+
 }

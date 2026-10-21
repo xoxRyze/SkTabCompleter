@@ -23,6 +23,12 @@ An addon for the Skript Minecraft plugin that adds simple tab completion for com
 # POTION_EFFECTS_LIST = list of all potion effects
 # ENTITY_TYPES_LIST = list of all entity types
 # SOUNDS_LIST = list of all sounds
+# PLUGINS_LIST = list of all plugins
+# ENABLED_PLUGINS_LIST = list of all enabled plugins
+# DISABLED_PLUGINS_LIST = list of all disabled plugins
+# BANNED_PLAYERS_LIST = list of all banned players
+# WHITELISTED_PLAYERS_LIST = list of all whitelisted players
+# OPS_PLAYERS_LIST = list of all players with operator
 # PLACEHOLDER:%<placeholder>% = a PlaceholderAPI placeholder for the player executing the command
 #                      (requires PlaceholderAPI 2.12.2+). Example: "PLACEHOLDER:%player_name%"
 #
@@ -30,6 +36,7 @@ An addon for the Skript Minecraft plugin that adds simple tab completion for com
 commands:
   example:
     permission: "examplecommand.tabcomplete"
+    aliases: [] # command aliases
     arg-1:
       - "get"
       - "give"
@@ -42,6 +49,9 @@ commands:
 
   example_2:
     permission: "" # EMPTY = NO PERMISSION
+    aliases:
+      - second_example
+      - alias_example2
     arg-1:
       - "selworld"
     arg-2:
@@ -51,6 +61,8 @@ commands:
 
   example_3:
     permission: ""
+    aliases:
+      - alias_example3
     arg-1:
       - "PLACEHOLDER:%team_name%"
       - "@e"
