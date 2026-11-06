@@ -1,4 +1,4 @@
-package it.xoxryze.skTabCompleter.cache;
+package it.xoxryze.skTabCompleter.api.data;
 
 import org.bukkit.Material;
 import org.bukkit.Registry;
@@ -8,7 +8,7 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public class CacheManager {
+public class PlaceholdersData {
 
     private static final Set<String> MATERIALS = Arrays.stream(Material.values())
             .filter(m -> !m.isLegacy())
@@ -29,7 +29,7 @@ public class CacheManager {
             .collect(Collectors.toUnmodifiableSet());
 
     private static final Set<String> SOUNDS = Registry.SOUNDS.stream()
-            .map(s -> s.getKey().toString())
+            .map(s -> s.key().toString())
             .collect(Collectors.toUnmodifiableSet());
 
     public static Set<String> getMaterials() {

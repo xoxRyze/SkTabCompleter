@@ -2,7 +2,7 @@ package it.xoxryze.skTabCompleter.managers;
 
 import it.xoxryze.skTabCompleter.api.managers.ConfigManager;
 import it.xoxryze.skTabCompleter.api.managers.TabCompleterManager;
-import it.xoxryze.skTabCompleter.cache.CacheManager;
+import it.xoxryze.skTabCompleter.api.data.PlaceholdersData;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -60,23 +60,23 @@ public class BaseTabCompleterManager implements TabCompleterManager {
         }
 
         if (configured.remove("MATERIAL_LIST")) {
-            completions.addAll(CacheManager.getMaterials());
+            completions.addAll(PlaceholdersData.getMaterials());
         }
 
         if (configured.remove("ENCHANTMENTS_LIST")) {
-            completions.addAll(CacheManager.getEnchantments());
+            completions.addAll(PlaceholdersData.getEnchantments());
         }
 
         if (configured.remove("POTION_EFFECTS_LIST")) {
-            completions.addAll(CacheManager.getPotionEffects());
+            completions.addAll(PlaceholdersData.getPotionEffects());
         }
 
         if (configured.remove("ENTITY_TYPES_LIST")) {
-            completions.addAll(CacheManager.getEntityTypes());
+            completions.addAll(PlaceholdersData.getEntityTypes());
         }
 
         if (configured.remove("SOUNDS_LIST")) {
-            completions.addAll(CacheManager.getSounds());
+            completions.addAll(PlaceholdersData.getSounds());
         }
 
         if (configured.remove("PLUGINS_LIST")) {
