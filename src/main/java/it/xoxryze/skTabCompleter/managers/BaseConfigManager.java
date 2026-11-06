@@ -28,26 +28,40 @@ public class BaseConfigManager implements ConfigManager {
 
     @Override
     public void addCommand(String key) {
-        String lower = key.toLowerCase(Locale.ROOT);
+        if (key == null || key.trim().isEmpty()) {
+            main.getLogger().warning("Attempted to register an empty command name.");
+            return;
+        }
+
+        String normalizedKey = key.trim();
+        String lower = normalizedKey.toLowerCase(Locale.ROOT);
+
+        if (commands.contains(normalizedKey)) {
+            main.getLogger().warning("Command '" + normalizedKey + "' is duplicated.");
+            return;
+        }
 
         String owner = names.get(lower);
         if (owner != null) {
-            if (owner.toLowerCase(Locale.ROOT).equals(lower)) {
-                main.getLogger().warning("Command '" + key + "' is duplicated.");
+            if (owner.equalsIgnoreCase(normalizedKey)) {
+                main.getLogger().warning("Command '" + normalizedKey + "' is duplicated.");
                 return;
             }
 
-            aliasesByCommand.get(owner).remove(lower);
+            List<String> previousAliases = aliasesByCommand.get(owner);
+            if (previousAliases != null) {
+                previousAliases.remove(lower);
+            }
             main.getLogger().warning("'" + lower + "' is an alias of '" + owner + " but is a command.");
         }
 
-        names.put(lower, key);
-        commands.add(key);
+        names.put(lower, normalizedKey);
+        commands.add(normalizedKey);
 
         List<String> accepted = new ArrayList<>();
-        aliasesByCommand.put(key, accepted);
+        aliasesByCommand.put(normalizedKey, accepted);
 
-        ConfigurationSection section = main.getConfig().getConfigurationSection("commands." + key);
+        ConfigurationSection section = main.getConfig().getConfigurationSection("commands." + normalizedKey);
         if (section == null) return;
 
         for (String raw : section.getStringList("aliases")) {
@@ -58,14 +72,14 @@ public class BaseConfigManager implements ConfigManager {
 
             String existing = names.get(alias);
             if (existing != null) {
-                if (!existing.equals(key)) {
-                    main.getLogger().warning("Alias '" + alias + "' of '" + key
+                if (!existing.equalsIgnoreCase(normalizedKey)) {
+                    main.getLogger().warning("Alias '" + alias + "' of '" + normalizedKey
                             + "' is already used by '" + existing + "', ignoring it.");
                 }
                 continue;
             }
 
-            names.put(alias, key);
+            names.put(alias, normalizedKey);
             accepted.add(alias);
         }
     }
