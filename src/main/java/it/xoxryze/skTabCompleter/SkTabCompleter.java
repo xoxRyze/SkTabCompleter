@@ -30,6 +30,12 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
     public void onEnable() {
         saveDefaultConfig();
         if (!checkSkript()) return;
+        PluginCommand command = getCommand("sktabcompleter");
+        if (command == null) {
+            getLogger().severe("The 'sktabcompleter' command is missing from plugin.yml. Disabling plugin.");
+            getServer().getPluginManager().disablePlugin(this);
+            return;
+        }
         initManagers();
         initListeners();
         Bukkit.getScheduler().runTaskLater(this, this::initCommands, 20L * 5);
@@ -40,8 +46,8 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
         } else {
             getLogger().info("PlaceholderAPI not found. All the functions with placeholders will be disabled.");
         }
-        getCommand("sktabcompleter").setExecutor(new SkTabCompleterCommand(this));
-        getCommand("sktabcompleter").setTabCompleter(new SkTabCompleterTabCompleter());
+        command.setExecutor(new SkTabCompleterCommand(this));
+        command.setTabCompleter(new SkTabCompleterTabCompleter());
         getLogger().info("SkTabCompleter v" + getDescription().getVersion() + " has been enabled!");
     }
 
@@ -119,6 +125,12 @@ public final class SkTabCompleter extends JavaPlugin implements SkTabCompleterAP
 
     private void registerTabCompleter(String cmdName, boolean warn) {
         Command cmd = Bukkit.getCommandMap().getCommand(cmdName);
+        if (cmd == null) {
+            if (warn) {
+                getLogger().warning("Could not register tab completer for /" + cmdName);
+            }
+            return;
+        }
         if (cmd instanceof PluginCommand pc) {
             pc.setTabCompleter((sender, command, label, args) ->
                     tabCompleterManager.getCompletions(sender, command.getName().toLowerCase(), args));
