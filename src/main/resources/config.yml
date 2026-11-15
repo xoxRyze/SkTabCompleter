@@ -2,7 +2,7 @@
 #
 # PLACEHOLDERS FOR ARGUMENTS
 #
-# OFFLINE_PLAYERS_LIST = list of all online and offline players, UNSUGGESTED FOR LARGE SERVERS
+# OFFLINE_PLAYERS_LIST = list of all online and offline players, NOT RECOMMENDED FOR LARGE SERVERS
 # PLAYERS_LIST = list of all online players
 # WORLDS_LIST = list of all worlds in the server
 # MATERIAL_LIST = list of all materials
@@ -19,7 +19,7 @@
 # PLACEHOLDER:%<placeholder>% = a PlaceholderAPI placeholder for the player executing the command
 #                      (requires PlaceholderAPI 2.12.2+). Example: "PLACEHOLDER:%player_name%"
 # %{<skript variable>}% = a Skript variable, %player% inside the name is replaced like Skript does.
-# Example: "%{homes::%player%}%"
+# Example: "%{homes::%player%::*}%"
 #
 
 commands:
@@ -69,4 +69,4 @@ commands:
     permission: "command.home"
     aliases: []
     arg-1:
-      - "%{homes::%player%}%"
+      - "%{homes::%player%::*}%"

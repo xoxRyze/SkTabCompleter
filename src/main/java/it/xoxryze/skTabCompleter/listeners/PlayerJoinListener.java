@@ -16,7 +16,7 @@ public class PlayerJoinListener implements Listener {
     
     private final SkTabCompleter main;
     private final UpdateChecker updateChecker;
-    private MiniMessage miniMessage;
+    private MiniMessage miniMessage = MiniMessage.miniMessage();
 
     public PlayerJoinListener(SkTabCompleter main, UpdateChecker updateChecker) {
         this.main = main;

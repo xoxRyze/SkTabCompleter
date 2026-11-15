@@ -34,6 +34,8 @@ public class TabCompleteListener implements Listener, TabCompleter {
 
         String[] parts = buffer.substring(1).split(" ", -1);
 
+        if (parts.length < 2) return;
+
         String cmdName = parts[0].toLowerCase();
         if (cmdName.contains(":")) cmdName = cmdName.substring(cmdName.indexOf(':') + 1);
 

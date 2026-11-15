@@ -68,7 +68,7 @@ public class SkTabCompleterCommand implements CommandExecutor {
                         while (section.contains("arg-" + argIndex)) {
                             java.util.List<String> argValues = section.getStringList("arg-" + argIndex);
                             if (!argValues.isEmpty()) {
-                                hover.append(" <gray><white>").append(String.join(" <gray><white> | <white>", argValues)).append(" <gray>");
+                                hover.append(" <gray><white><").append(String.join(" <gray><white> | <white>", argValues)).append("> <gray>");
                             }
                             argIndex++;
                         }
