@@ -1,8 +1,8 @@
-# SkTabCompleter - Config generated in v1.1.2
+# SkTabCompleter - Config generated in v1.2.0
 #
 # PLACEHOLDERS FOR ARGUMENTS
 #
-# OFFLINE_PLAYERS_LIST = list of all online and offline players
+# OFFLINE_PLAYERS_LIST = list of all online and offline players, NOT RECOMMENDED FOR LARGE SERVERS
 # PLAYERS_LIST = list of all online players
 # WORLDS_LIST = list of all worlds in the server
 # MATERIAL_LIST = list of all materials
@@ -18,6 +18,8 @@
 # OPS_PLAYERS_LIST = list of all players with operator
 # PLACEHOLDER:%<placeholder>% = a PlaceholderAPI placeholder for the player executing the command
 #                      (requires PlaceholderAPI 2.12.2+). Example: "PLACEHOLDER:%player_name%"
+# %{<skript variable>}% = a Skript variable, %player% inside the name is replaced like Skript does.
+# Example: "%{homes::%player%::*}%"
 #
 
 commands:
@@ -55,10 +57,16 @@ commands:
       - "@e"
 
   example_4:
-    permission: "server.command.unban"+
+    permission: "server.command.unban"
     aliases:
       - unban
     arg-1:
       - BANNED_PLAYERS_LIST
     arg-2:
       - "<reason>"
+
+  example_5:
+    permission: "command.home"
+    aliases: []
+    arg-1:
+      - "%{homes::%player%::*}%"

@@ -31,6 +31,8 @@ An addon for the Skript Minecraft plugin that adds simple tab completion for com
 # OPS_PLAYERS_LIST = list of all players with operator
 # PLACEHOLDER:%<placeholder>% = a PlaceholderAPI placeholder for the player executing the command
 #                      (requires PlaceholderAPI 2.12.2+). Example: "PLACEHOLDER:%player_name%"
+# %{<skript variable>}% = a Skript variable, %player% inside the name is replaced like Skript does.
+# Example: "%{homes::%player%::*}%"
 #
 
 commands:
@@ -66,6 +68,21 @@ commands:
     arg-1:
       - "PLACEHOLDER:%team_name%"
       - "@e"
+
+  example_4:
+    permission: "server.command.unban"
+    aliases:
+      - unban
+    arg-1:
+      - BANNED_PLAYERS_LIST
+    arg-2:
+      - "<reason>"
+
+  example_5:
+    permission: "command.home"
+    aliases: []
+    arg-1:
+      - "%{homes::%player%::*}%"
 ```
 </details>
 
