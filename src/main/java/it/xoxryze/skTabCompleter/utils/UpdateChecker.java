@@ -26,7 +26,7 @@ public class UpdateChecker {
                 String currentVersion = main.getDescription().getVersion();
 
                 this.latestVersion = remoteVersion;
-                this.updateAvailable = !currentVersion.equalsIgnoreCase(remoteVersion);
+                this.updateAvailable = isNewer(remoteVersion, currentVersion);
 
                 Bukkit.getScheduler().runTask(main, () -> {
                     if (updateAvailable) {
@@ -68,4 +68,25 @@ public class UpdateChecker {
     public String getLatestVersion() {
         return latestVersion;
     }
+
+    private static boolean isNewer(String remote, String current) {
+        String[] r = remote.split("\\.");
+        String[] c = current.split("\\.");
+        int len = Math.max(r.length, c.length);
+        for (int i = 0; i < len; i++) {
+            int rv = i < r.length ? parsePart(r[i]) : 0;
+            int cv = i < c.length ? parsePart(c[i]) : 0;
+            if (rv != cv) return rv > cv;
+        }
+        return false;
+    }
+
+    private static int parsePart(String s) {
+        try {
+            return Integer.parseInt(s.replaceAll("\\D.*", ""));
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
 }

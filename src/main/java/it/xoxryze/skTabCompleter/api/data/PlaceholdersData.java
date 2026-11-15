@@ -29,7 +29,7 @@ public class PlaceholdersData {
             .collect(Collectors.toUnmodifiableSet());
 
     private static final Set<String> SOUNDS = Registry.SOUNDS.stream()
-            .map(s -> s.key().toString())
+            .map(s -> s.key().value())
             .collect(Collectors.toUnmodifiableSet());
 
     public static Set<String> getMaterials() {

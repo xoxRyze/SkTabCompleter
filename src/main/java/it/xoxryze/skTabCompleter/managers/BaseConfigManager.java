@@ -52,7 +52,7 @@ public class BaseConfigManager implements ConfigManager {
             if (previousAliases != null) {
                 previousAliases.remove(lower);
             }
-            main.getLogger().warning("'" + lower + "' is an alias of '" + owner + " but is a command.");
+            main.getLogger().warning("'" + lower + "' is an alias of '" + owner + "' but is a command.");
         }
 
         names.put(lower, normalizedKey);

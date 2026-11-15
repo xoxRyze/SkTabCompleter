@@ -1,11 +1,12 @@
 package it.xoxryze.skTabCompleter.commands;
 
 import it.xoxryze.skTabCompleter.SkTabCompleter;
-import it.xoxryze.skTabCompleter.utils.Permission;
+import it.xoxryze.skTabCompleter.api.utils.Permission;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -17,6 +18,7 @@ import java.util.List;
 public class SkTabCompleterCommand implements CommandExecutor {
 
     private final SkTabCompleter main;
+    private MiniMessage miniMessage = MiniMessage.miniMessage();
 
     public SkTabCompleterCommand(SkTabCompleter main) {
         this.main = main;
@@ -36,52 +38,52 @@ public class SkTabCompleterCommand implements CommandExecutor {
         switch (args[0].toLowerCase()) {
             case "reload":
                 if (!Permission.hasCMDPermission(sender, "reload")) {
-                    sender.sendMessage(Component.text("§cYou don't have the permission to do it!"));
+                    sender.sendMessage(miniMessage.deserialize("<red>You don't have the permission to do it!"));
                     return true;
                 }
                 long now = System.currentTimeMillis();
                 main.reload();
                 long end = System.currentTimeMillis();
-                sender.sendMessage(Component.text(
-                        String.format("§aConfigurations reloaded in §e%s ms§a!", end - now)));
+                sender.sendMessage(miniMessage.deserialize(
+                        String.format("<green>Configurations reloaded in <yellow>%s ms<green>!", end - now)));
                 break;
             case "commands":
                 if (!Permission.hasCMDPermission(sender, "commands")) {
-                    sender.sendMessage(Component.text("§cYou don't have the permission to do it!"));
+                    sender.sendMessage(miniMessage.deserialize("<red>You don't have the permission to do it!"));
                     return true;
                 }
                 if (main.getConfigManager().getCommands().isEmpty()) {
-                    sender.sendMessage(Component.text("§cThere is no command configured!"));
+                    sender.sendMessage(miniMessage.deserialize("<red>There is no command configured!"));
                     return true;
                 }
                 sender.sendMessage(Component.empty());
-                sender.sendMessage(Component.text(String.format(
-                        " §b§lConfigured Commands §7(%s)", main.getConfigManager().getCommands().size())));
+                sender.sendMessage(miniMessage.deserialize(String.format(
+                        " <aqua><bold>Configured Commands <gray>(%s)", main.getConfigManager().getCommands().size())));
                 for (String cmd : main.getConfigManager().getCommands()) {
 
-                    StringBuilder hover = new StringBuilder("§7/" + cmd);
+                    StringBuilder hover = new StringBuilder("<gray>/" + cmd);
                     ConfigurationSection section = main.getConfigManager().getSection(cmd);
                     if (section != null) {
                         int argIndex = 1;
                         while (section.contains("arg-" + argIndex)) {
                             java.util.List<String> argValues = section.getStringList("arg-" + argIndex);
                             if (!argValues.isEmpty()) {
-                                hover.append(" §7<§f").append(String.join("§7 | §f", argValues)).append("§7>");
+                                hover.append(" <gray><white>").append(String.join(" <gray><white> | <white>", argValues)).append(" <gray>");
                             }
                             argIndex++;
                         }
                     }
                     List<String> aliases = main.getConfigManager().getAliases(cmd);
                     if (!aliases.isEmpty()) {
-                        hover.append("\n§8Aliases: §7/").append(String.join("§8, §7/", aliases));
+                        hover.append("\n<gray>Aliases: <white>/").append(String.join("<gray>, <white>/", aliases));
                     }
-                    sender.sendMessage(Component.text(" §8» §7/" + cmd)
-                            .hoverEvent(HoverEvent.showText(Component.text(hover.toString()))));
+                    sender.sendMessage(miniMessage.deserialize(" <gray>» <white>/" + cmd)
+                            .hoverEvent(HoverEvent.showText(miniMessage.deserialize(hover.toString()))));
                 }
                 sender.sendMessage(Component.empty());
                 break;
             default:
-                sender.sendMessage(Component.text("§cCommand not found! Use /sktabcompleter for information"));
+                sender.sendMessage(miniMessage.deserialize("<red>Command not found! Use /sktabcompleter for information"));
                 break;
         }
 
@@ -92,12 +94,12 @@ public class SkTabCompleterCommand implements CommandExecutor {
         TextColor color = TextColor.color(24, 187, 229);
         player.sendMessage(Component.empty());
         player.sendMessage(Component.text("\uD83D\uDEC8 /sktabcompleter", color)
-                .hoverEvent(HoverEvent.showText(Component.text("§7Click to view SkTabCompleter GitGub page")))
+                .hoverEvent(HoverEvent.showText(miniMessage.deserialize("<gray>Click to view SkTabCompleter GitHub page")))
                 .clickEvent(ClickEvent.openUrl("https://github.com/xoxRyze/SkTabCompleter")));
         player.sendMessage(Component.text(" /sktabcompleter commands", color)
-                .hoverEvent(HoverEvent.showText(Component.text("§7View configured commands"))));
+                .hoverEvent(HoverEvent.showText(miniMessage.deserialize("<gray>View configured commands"))));
         player.sendMessage(Component.text(" /sktabcompleter reload", color)
-                .hoverEvent(HoverEvent.showText(Component.text("§7Reload configurations"))));
+                .hoverEvent(HoverEvent.showText(miniMessage.deserialize("<gray>Reload configurations"))));
         player.sendMessage(Component.empty());
         return;
     }

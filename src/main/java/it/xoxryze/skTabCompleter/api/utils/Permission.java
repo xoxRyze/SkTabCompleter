@@ -1,4 +1,4 @@
-package it.xoxryze.skTabCompleter.utils;
+package it.xoxryze.skTabCompleter.api.utils;
 
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

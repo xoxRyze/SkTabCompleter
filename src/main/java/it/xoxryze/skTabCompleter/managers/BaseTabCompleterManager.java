@@ -3,6 +3,7 @@ package it.xoxryze.skTabCompleter.managers;
 import it.xoxryze.skTabCompleter.api.managers.ConfigManager;
 import it.xoxryze.skTabCompleter.api.managers.TabCompleterManager;
 import it.xoxryze.skTabCompleter.api.data.PlaceholdersData;
+import it.xoxryze.skTabCompleter.api.utils.SkriptVariableResolver;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -48,7 +49,7 @@ public class BaseTabCompleterManager implements TabCompleterManager {
         List<String> completions = new ArrayList<>();
 
         if (configured.remove("OFFLINE_PLAYERS_LIST")) {
-            Arrays.stream(Bukkit.getOfflinePlayers()).toList().forEach(o -> completions.add(o.getName()));
+            addOfflinePlayerNames(completions, Arrays.asList(Bukkit.getOfflinePlayers()));
         }
 
         if (configured.remove("PLAYERS_LIST")) {
@@ -116,16 +117,17 @@ public class BaseTabCompleterManager implements TabCompleterManager {
                 .toList();
         configured.removeAll(placeholders);
 
-        if (BasePlaceholderManager.isEnabled()) {
-            for (String entry : placeholders) {
-                String rawPlaceholder = entry.substring("PLACEHOLDER:".length());
-                String expanded = BasePlaceholderManager.getPlaceholder(rawPlaceholder, player);
-                if (expanded.contains(",")) {
-                    completions.addAll(Arrays.asList(expanded.split(",")));
-                } else {
-                    completions.add(expanded);
-                }
-            }
+        for (String entry : placeholders) {
+            String rawPlaceholder = entry.substring("PLACEHOLDER:".length());
+            if (!BasePlaceholderManager.isEnabled() && !SkriptVariableResolver.contains(rawPlaceholder)) continue;
+            addSplits(completions, BasePlaceholderManager.getPlaceholder(rawPlaceholder, player));
+        }
+
+        List<String> skriptEntries = configured.stream().filter(SkriptVariableResolver::contains).toList();
+        configured.removeAll(skriptEntries);
+
+        for (String entry : skriptEntries) {
+            addSplits(completions, BasePlaceholderManager.getPlaceholder(entry, player));
         }
 
         completions.addAll(configured);
@@ -137,10 +139,14 @@ public class BaseTabCompleterManager implements TabCompleterManager {
                 .toList();
     }
 
+    private static void addSplits(List<String> completions, String expanded) {
+        for (String part : expanded.split(",")) {
+            String value = part.trim();
+            if (!value.isEmpty()) completions.add(value);
+        }
+    }
+
     private static void addOfflinePlayerNames(List<String> completions, Collection<? extends OfflinePlayer> players) {
-        players.stream()
-                .map(OfflinePlayer::getName)
-                .filter(Objects::nonNull)
-                .forEach(completions::add);
+        players.stream().map(OfflinePlayer::getName).filter(Objects::nonNull).forEach(completions::add);
     }
 }

@@ -2,6 +2,7 @@ package it.xoxryze.skTabCompleter.managers;
 
 import it.xoxryze.skTabCompleter.SkTabCompleter;
 import it.xoxryze.skTabCompleter.api.managers.PlaceholderManager;
+import it.xoxryze.skTabCompleter.api.utils.SkriptVariableResolver;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 
@@ -24,8 +25,9 @@ public class BasePlaceholderManager implements PlaceholderManager {
     }
 
     public static String getPlaceholder(String placeholder, Player player) {
-        if (!enabled || player == null) return placeholder;
-        return PlaceholderAPI.setPlaceholders(player, placeholder);
+        String resolved = SkriptVariableResolver.resolve(placeholder, player);
+        if (!enabled || player == null) return resolved;
+        return PlaceholderAPI.setPlaceholders(player, resolved);
     }
 
     @Override
